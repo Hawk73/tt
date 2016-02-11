@@ -3,8 +3,8 @@
 
 %% Application callbacks
 -export([
-    start/2,
-    stop/1
+  start/2,
+  stop/1
 ]).
 
 %% API
@@ -15,34 +15,34 @@
 %% ===================================================================
 
 dispatch_rules() ->
-    Static = fun(Filetype) ->
-        {lists:append(["/", Filetype, "/[...]"]), cowboy_static, [
-            {directory, {priv_dir, traffic, [list_to_binary(Filetype)]}},
-            {mimetypes, {fun mimetypes:path_to_mimes/2, default}}
-        ]}
-    end,
-    cowboy_router:compile([
-        {'_', [
-            Static("css"),
-            Static("js"),
-            Static("img"),
-            {"/", index_handler, []},
-            {'_', notfound_handler, []}
-        ]}
-    ]).
+  Static = fun(Filetype) ->
+  {lists:append(["/", Filetype, "/[...]"]), cowboy_static, [
+    {directory, {priv_dir, traffic, [list_to_binary(Filetype)]}},
+    {mimetypes, {fun mimetypes:path_to_mimes/2, default}}
+  ]}
+  end,
+  cowboy_router:compile([
+  {'_', [
+    Static("css"),
+    Static("js"),
+    Static("img"),
+    {"/", index_handler, []},
+    {'_', notfound_handler, []}
+  ]}
+  ]).
 
 %% ===================================================================
 %% Application callbacks
 %% ===================================================================
 
 start(_StartType, _StartArgs) ->
-    Dispatch = dispatch_rules(),
-    Port = 8008,
-    {ok, _} = cowboy:start_http(http_listener, 100,
-        [{port, Port}],
-        [{env, [{dispatch, Dispatch}]}]
-    ),
-    traffic_sup:start_link().
+  Dispatch = dispatch_rules(),
+  Port = 8008,
+  {ok, _} = cowboy:start_http(http_listener, 100,
+  [{port, Port}],
+  [{env, [{dispatch, Dispatch}]}]
+  ),
+  traffic_sup:start_link().
 
 stop(_State) ->
-    ok.
+  ok.

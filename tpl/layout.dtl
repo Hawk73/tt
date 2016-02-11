@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>traffic</title>
+  <title>traffic</title>
 </head>
 <body>
 {% block content %}{% endblock %}
