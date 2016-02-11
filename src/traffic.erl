@@ -1,4 +1,4 @@
--module(webserver).
+-module(traffic).
 
 %% API
 -export([
@@ -8,7 +8,7 @@
     c_tpl/0, c_tpl/1, c_tpl/2
 ]).
 
--define(APPS, [crypto, ranch, cowboy, webserver]).
+-define(APPS, [crypto, ranch, cowboy, traffic]).
 
 %% ===================================================================
 %% API functions
@@ -23,7 +23,7 @@ stop() ->
     ok = stop_apps(lists:reverse(?APPS)).
 
 update_routes() ->
-    Routes = webserver_app:dispatch_rules(),
+    Routes = traffic_app:dispatch_rules(),
     cowboy:set_env(http_listener, dispatch, Routes).
 
 c_tpl() ->

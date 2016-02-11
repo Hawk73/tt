@@ -1,4 +1,4 @@
--module(webserver_app).
+-module(traffic_app).
 -behaviour(application).
 
 %% Application callbacks
@@ -17,7 +17,7 @@
 dispatch_rules() ->
     Static = fun(Filetype) ->
         {lists:append(["/", Filetype, "/[...]"]), cowboy_static, [
-            {directory, {priv_dir, webserver, [list_to_binary(Filetype)]}},
+            {directory, {priv_dir, traffic, [list_to_binary(Filetype)]}},
             {mimetypes, {fun mimetypes:path_to_mimes/2, default}}
         ]}
     end,
@@ -42,7 +42,7 @@ start(_StartType, _StartArgs) ->
         [{port, Port}],
         [{env, [{dispatch, Dispatch}]}]
     ),
-    webserver_sup:start_link().
+    traffic_sup:start_link().
 
 stop(_State) ->
     ok.

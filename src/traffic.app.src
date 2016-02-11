@@ -1,4 +1,4 @@
-{application, webserver,
+{application, traffic,
  [
   {description, ""},
   {vsn, "1"},
@@ -7,6 +7,6 @@
                   kernel,
                   stdlib
                  ]},
-  {mod, { webserver_app, []}},
+  {mod, { traffic_app, []}},
   {env, []}
  ]}.

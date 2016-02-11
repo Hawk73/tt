@@ -1,5 +1,5 @@
 
--module(webserver_sup).
+-module(traffic_sup).
 
 -behaviour(supervisor).
 
