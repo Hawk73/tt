@@ -12,6 +12,6 @@ clean:
 	@( $(REBAR) clean )
 
 run:
-	@( erl -pa ebin deps/*/ebin -s webserver )
+	@( erl -pa ebin deps/*/ebin -s traffic )
 
 .PHONY: all deps compile clean run
