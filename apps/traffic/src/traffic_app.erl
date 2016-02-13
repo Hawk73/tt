@@ -1,17 +1,42 @@
 -module(traffic_app).
 -behaviour(application).
 
--export([start/2]).
--export([stop/1]).
+%% Application callbacks
+-export([
+  start/2,
+  stop/1
+]).
+
+
+%% API
+-export([dispatch_rules/0]).
+
+
+%% ===================================================================
+%% API functions
+%% ===================================================================
+
+dispatch_rules() ->
+  cowboy_router:compile([
+    {'_', [
+      {"/", hello_handler, []},
+      {'_', not_found_handler, []}
+    ]}
+  ]).
+
+
+%% ===================================================================
+%% Application callbacks
+%% ===================================================================
 
 start(_Type, _Args) ->
-	Dispatch = cowboy_router:compile([
-		{'_', [{"/", hello_handler, []}]}
-	]),
-	{ok, _} = cowboy:start_http(my_http_listener, 100, [{port, 8080}],
-		[{env, [{dispatch, Dispatch}]}]
-	),
-	traffic_sup:start_link().
+  Dispatch = dispatch_rules(),
+  Port = 8080,
+  {ok, _} = cowboy:start_http(my_http_listener, 100,
+    [{port, Port}],
+    [{env, [{dispatch, Dispatch}]}]
+  ),
+  traffic_sup:start_link().
 
 stop(_State) ->
-	ok.
+  ok.
