@@ -9,8 +9,10 @@ rel/traffic_project
 rel/reltool.sample.config
 
 
-apps/traffic/.rebar
-apps/traffic/.deps
-apps/traffic/ebin
+apps/*/.rebar
+apps/*/.erlang.mk
+apps/*/.deps
+apps/*/_rel
+apps/*/ebin
 
 .DS_Store
