@@ -9,18 +9,18 @@
 }).
 
 %%init(_, Req, _Opts) ->
-%%	{ok, Req, #state{}}.
+%%  {ok, Req, #state{}}.
 
 init(_, Req, Opts) ->
-	Req2 = cowboy_req:reply(200,
-		[{<<"content-type">>, <<"text/plain">>}],
-		<<"Hello Marat!">>,
-		Req),
-	{ok, Req2, Opts}.
+  Req2 = cowboy_req:reply(200,
+    [{<<"content-type">>, <<"text/plain">>}],
+    <<"Hello Marat!">>,
+    Req),
+  {ok, Req2, Opts}.
 
 handle(Req, State=#state{}) ->
-	{ok, Req2} = cowboy_req:reply(200, Req),
-	{ok, Req2, State}.
+  {ok, Req2} = cowboy_req:reply(200, Req),
+  {ok, Req2, State}.
 
 terminate(_Reason, _Req, _State) ->
-	ok.
+  ok.
