@@ -3,3 +3,14 @@
 deps
 ebin
 erl_crash.dump
+
+rel/files
+rel/traffic_project
+rel/reltool.sample.config
+
+
+apps/traffic/.rebar
+apps/traffic/.deps
+apps/traffic/ebin
+
+.DS_Store

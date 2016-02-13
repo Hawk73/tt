@@ -37,7 +37,7 @@ dispatch_rules() ->
 
 start(_StartType, _StartArgs) ->
   Dispatch = dispatch_rules(),
-  Port = 8008,
+  Port = 3000,
   {ok, _} = cowboy:start_http(http_listener, 100,
   [{port, Port}],
   [{env, [{dispatch, Dispatch}]}]
