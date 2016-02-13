@@ -2,7 +2,7 @@ PROJECT = traffic
 PROJECT_DESCRIPTION = Traffic App
 PROJECT_VERSION = 1.0.0
 
-DEPS = cowboy
+DEPS = cowboy uuid
 
 include erlang.mk
 
@@ -13,3 +13,6 @@ off:
 	@( ./_rel/traffic_release/bin/traffic_release stop )
 
 reon: off on
+
+console:
+	@( erl -pa ebin deps/*/ebin )
