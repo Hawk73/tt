@@ -5,7 +5,7 @@
 -export([handle/2]).
 -export([terminate/3]).
 
-init(_, Req, _Opts) ->
+init(_Transport, Req, _Opts) ->
   {ok, Req, undefined_state}.
 
 handle(Req, State) ->
