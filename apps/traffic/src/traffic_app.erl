@@ -21,6 +21,7 @@ dispatch_rules() ->
     {'_', [
       {"/", hello_handler, []},
       {"/sequence/create", sequence_handler, []},
+      {"/observation/add", observation_handler, []},
       {'_', not_found_handler, []}
     ]}
   ]).
