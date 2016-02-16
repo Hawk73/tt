@@ -13,11 +13,12 @@ perform(_Data = #indication{color=Color, numbers=Numbers, uuid=Uuid}) ->
     true ->
       sequence_processor:append_data(Numbers, Uuid),
       Finished = Color == <<"red">>,
-      find_start_and_missing(Finished);
+      find_start_and_missing(Uuid, Finished);
     _ ->
       {error, <<"The sequence isn't found">>}
   end.
 
 
-find_start_and_missing(_Finished) ->
+find_start_and_missing(Uuid, _Finished) ->
+  error_logger:info_msg("Data: ~p~n", [sequence_processor:data(Uuid)]),
   {ok, [[1, 2], ["0000000", "1000010"]]}.

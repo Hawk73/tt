@@ -21,7 +21,7 @@ handle(Req, State) ->
 process(<<"POST">>, true, Req) ->
   %% @todo: Может заюзать опцию content_decode для парсинга?
   {ok, ReqBody, _Req2} = cowboy_req:body(Req),
-  DecodedReqBody = jsx:decode(ReqBody),
+  DecodedReqBody = decode(ReqBody),
   Body = process_data(DecodedReqBody),
   cowboy_req:reply(200, [], Body, Req);
 process(<<"POST">>, false, Req) ->
@@ -32,11 +32,19 @@ process(_, _, Req) ->
   cowboy_req:reply(405, [], Body, Req).
 
 
+decode(ReqBody) ->
+  try jsx:decode(ReqBody) of
+    DecodedReqBody -> DecodedReqBody
+  catch
+    _:_ -> []
+  end.
+
+
 %% @todo: провалидировать цвет
 process_data(_Data = [
   {<<"observation">>, [{<<"color">>, Color}, {<<"numbers">>, Numbers}]},
-  {<<"sequence">>, Uuid}]
-) ->
+  {<<"sequence">>, Uuid}
+]) ->
   case observation_processor:perform(#indication{color=Color, numbers=Numbers, uuid=Uuid}) of
     {ok, [StartNumbers, MissingSections]} ->
       observation_responses:ok(StartNumbers, MissingSections);

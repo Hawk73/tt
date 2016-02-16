@@ -11,7 +11,7 @@ start_link() ->
   supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 init([]) ->
-  ?TAB = ets:new(?TAB, [set, public, named_table]),
+  sequence_processor:init(),
   Procs = [],
 %%  @todo: узнать почему не работает?
 %%  Procs = [
