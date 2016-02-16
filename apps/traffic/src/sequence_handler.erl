@@ -9,9 +9,12 @@ init(_Transport, Req, _Opts) ->
   {ok, Req, undefined_state}.
 
 handle(Req, State) ->
-  %%  TODO: запомнить uuid
-  Uuid = uuid:to_string(uuid:uuid1()),
-  Body = erlang:iolist_to_binary([<<"{\"status\": \"ok\", \"response\": {\"sequence\": \"">>, Uuid, <<"\"}}">>]),
+  Body = case sequence_processor:create_uuid() of
+    {Uuid, true} ->
+      sequence_responses:ok(Uuid);
+    _ ->
+      responses:error(<<"Internal error">>)
+  end,
   {ok, Req2} = cowboy_req:reply(200, [], Body, Req),
   {ok, Req2, State}.
 

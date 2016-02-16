@@ -19,31 +19,33 @@ handle(Req, State) ->
 
 
 process(<<"POST">>, true, Req) ->
-  %% TODO: Может заюзать опцию content_decode для парсинга?
+  %% @todo: Может заюзать опцию content_decode для парсинга?
   {ok, ReqBody, _Req2} = cowboy_req:body(Req),
   DecodedReqBody = jsx:decode(ReqBody),
   Body = process_data(DecodedReqBody),
   cowboy_req:reply(200, [], Body, Req);
 process(<<"POST">>, false, Req) ->
-  Body = observation_responses:error(<<"Missing body.">>),
+  Body = responses:error(<<"Missing body.">>),
   cowboy_req:reply(400, [], Body, Req);
 process(_, _, Req) ->
-  Body = observation_responses:error(<<"Method not allowed.">>),
+  Body = responses:error(<<"Method not allowed.">>),
   cowboy_req:reply(405, [], Body, Req).
 
 
 %% @todo: провалидировать цвет
 process_data(_Data = [
   {<<"observation">>, [{<<"color">>, Color}, {<<"numbers">>, Numbers}]},
-  {<<"sequence">>, Sequence}]
+  {<<"sequence">>, Uuid}]
 ) ->
-  [StartNumbers, MissingSections] = observation_processor:perform(
-    #indication{color=Color, numbers=Numbers, sequence=Sequence}
-  ),
-  observation_responses:ok(StartNumbers, MissingSections);
+  case observation_processor:perform(#indication{color=Color, numbers=Numbers, uuid=Uuid}) of
+    {ok, [StartNumbers, MissingSections]} ->
+      observation_responses:ok(StartNumbers, MissingSections);
+    {error, Msg} ->
+      responses:error(Msg)
+  end;
 process_data(InvalidData) ->
   error_logger:info_msg("Invalid data: ~p~n", InvalidData),
-  observation_responses:error(<<"Invalid format.">>).
+  responses:error(<<"Invalid format.">>).
 
 
 terminate(_Reason, _Req, _State) ->
