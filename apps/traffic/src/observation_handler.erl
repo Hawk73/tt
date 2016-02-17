@@ -42,10 +42,12 @@ decode(ReqBody) ->
 
 %% @todo: провалидировать цвет
 process_data(_Data = [
-  {<<"observation">>, [{<<"color">>, Color}, {<<"numbers">>, Numbers}]},
+  {<<"observation">>, [{<<"color">>, Color}, {<<"numbers">>, [FirstDigit, SecondDigit]}]},
   {<<"sequence">>, Uuid}
 ]) ->
-  case observation_processor:perform(#indication{color=Color, numbers=Numbers, uuid=Uuid}) of
+  case observation_processor:perform(
+    #indication{color=Color, first_number=FirstDigit, second_number=SecondDigit, uuid=Uuid}
+  ) of
     {ok, [StartNumbers, MissingSections]} ->
       observation_responses:ok(StartNumbers, MissingSections);
     {error, Msg} ->
