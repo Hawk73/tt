@@ -42,20 +42,22 @@ decode(ReqBody) ->
 
 %% @todo: провалидировать цвет
 process_data(_Data = [
-  {<<"observation">>, [{<<"color">>, Color}, {<<"numbers">>, [FirstDigit, SecondDigit]}]},
+  {<<"observation">>, [{<<"color">>, Color}, {<<"numbers">>, BinaryDigitStrs}]},
   {<<"sequence">>, Uuid}
 ]) ->
-  case observation_processor:perform(
-    #indication{color=Color, first_number=FirstDigit, second_number=SecondDigit, uuid=Uuid}
-  ) of
+  Indication = case numbers:parse_binary_digits(BinaryDigitStrs) of
+    [{ok, FirstEDigit}, {ok, SecondEDigit}] ->
+      #indication{color=Color, first_e_digit=FirstEDigit, second_e_digit=SecondEDigit, uuid=Uuid};
+    _ -> error
+  end,
+
+  case observation_processor:perform(Indication) of
     {ok, [StartNumbers, MissingSections]} ->
       observation_responses:ok(StartNumbers, MissingSections);
     {error, Msg} ->
       responses:error(Msg)
   end;
-process_data(InvalidData) ->
-  error_logger:info_msg("Invalid data: ~p~n", InvalidData),
-  responses:error(<<"Invalid format.">>).
+process_data(InvalidData) -> responses:error(<<"Invalid format.">>, InvalidData).
 
 
 terminate(_Reason, _Req, _State) ->

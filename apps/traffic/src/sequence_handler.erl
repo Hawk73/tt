@@ -13,7 +13,7 @@ handle(Req, State) ->
     {Uuid, true} ->
       sequence_responses:ok(Uuid);
     _ ->
-      responses:error(<<"Internal error">>)
+      responses:error(<<"Internal error: code 1.">>)
   end,
   {ok, Req2} = cowboy_req:reply(200, [], Body, Req),
   {ok, Req2, State}.

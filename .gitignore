@@ -16,3 +16,5 @@ apps/*/_rel
 apps/*/ebin
 
 .DS_Store
+
+.traffic.plt

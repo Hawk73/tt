@@ -1,3 +1,4 @@
+%% EDigit (EncodedDigit) число от 0 до 9 закодированное при помощи encode_digit
 
 %%  0   1   2   3   4   5   6   7   8   9
 %%  -       -   -       -   -   -   -   -
@@ -31,17 +32,4 @@
 -define(POSSIBLE_FIRST_NUMBERS, [?ZERO, ?ONE, ?TWO, ?THREE, ?FOUR, ?FIVE, ?SIX, ?SEVEN, ?EIGHT, ?NINE]).
 -define(POSSIBLE_SECOND_NUMBERS, [?ONE, ?TWO, ?THREE, ?FOUR, ?FIVE, ?SIX, ?SEVEN, ?EIGHT, ?NINE]).
 
-
-decode_digit(Encoded) ->
-  case Encoded of
-    ?ZERO -> 0;
-    ?ONE -> 1;
-    ?TWO -> 2;
-    ?THREE -> 3;
-    ?FOUR -> 4;
-    ?FIVE -> 5;
-    ?SIX -> 6;
-    ?SEVEN -> 7;
-    ?EIGHT -> 8;
-    ?NINE -> 9
-  end.
+-define(BINARY_WEIGHT, {1, 2, 4, 8, 16, 32, 64}).

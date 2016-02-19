@@ -29,10 +29,11 @@ exists_uuid(Uuid) ->
   [] =/= ets:lookup(?TAB, Uuid).
 
 
-append_data(Uuid, FirstDigit, SecondDigit) ->
-  %% @todo: привести к integer
+append_data(Uuid, FirstEDigit, SecondEDigit) ->
   %% @todo: запоминать цвет ? надо выдавать ошибку "The red observation should be the last"
-  ets:insert(?TAB, {Uuid, FirstDigit, SecondDigit}).
+  %% @todo: удалить пустое значение
+  %% ets:delete(?TAB, {Uuid, []}),
+  ets:insert(?TAB, {Uuid, FirstEDigit, SecondEDigit}).
 
 
 data(Uuid) ->
