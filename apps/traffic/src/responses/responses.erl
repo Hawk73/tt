@@ -10,4 +10,4 @@ error(Msg, Data) ->
   responses:error(Msg).
 
 error(Msg) ->
-  erlang:iolist_to_binary([<<"{\"status\": \"error\", \"msg\": \"">>, Msg, <<"\"}">>]).
+  iolist_to_binary([<<"{\"status\": \"error\", \"msg\": \"">>, Msg, <<"\"}">>]).
