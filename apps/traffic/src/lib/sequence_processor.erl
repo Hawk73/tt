@@ -3,16 +3,22 @@
 -include("recdef.hrl").
 
 -export([
-  init/0,
+  start/0,
+  stop/0,
   create_uuid/0,
-  exists_uuid/1,
-  append_data/3,
+  delete/1,
+  last_item/1,
+  append_data/1,
   data/1
 ]).
 
-init() ->
+start() ->
   %% @todo: заменить ETS на DETS
   ets:new(?TAB, [duplicate_bag, public, named_table]).
+
+
+stop() ->
+  ets:delete(?TAB).
 
 
 create_uuid() ->
@@ -20,20 +26,26 @@ create_uuid() ->
   Uuid = uuid:uuid1(),
   UuidString = uuid:to_string(Uuid),
   UuidBitString = list_to_bitstring(UuidString),
-  Created = ets:insert(?TAB, {UuidBitString, []}),
+  Created = ets:insert(?TAB, {UuidBitString, first}),
   {UuidBitString, Created}.
 
 
-exists_uuid(Uuid) ->
-%%  @todo: заюзать info или lookup_element
-  [] =/= ets:lookup(?TAB, Uuid).
+delete(Uuid) ->
+  ets:delete(?TAB, Uuid).
 
 
-append_data(Uuid, FirstEDigit, SecondEDigit) ->
-  %% @todo: запоминать цвет ? надо выдавать ошибку "The red observation should be the last"
-  %% @todo: удалить пустое значение
-  %% ets:delete(?TAB, {Uuid, []}),
-  ets:insert(?TAB, {Uuid, FirstEDigit, SecondEDigit}).
+last_item(Uuid) ->
+  %% @todo: может найти долее дешевый способcase data(Uuid) of
+  case data(Uuid) of
+    [] -> undefined;
+    Data -> lists:last(Data)
+  end.
+
+
+append_data(_Data = #indication{uuid=Uuid, color = <<"green">>, first_e_digit=FirstEDigit, second_e_digit=SecondEDigit}) ->
+  ets:insert(?TAB, {Uuid, FirstEDigit, SecondEDigit});
+append_data(_Data = #indication{uuid=Uuid, color = <<"red">>, first_e_digit=_, second_e_digit=_}) ->
+  ets:insert(?TAB, {Uuid, finished}).
 
 
 data(Uuid) ->

@@ -89,6 +89,7 @@ decode_digit(EDigit) ->
 %% Возможные варианты цифр (разрядов) в зависимости от возможных вариантов числа.
 %% Пример: [02, 08, 82, 88] -> [[0, 8], [2, 8]] -> [[119, 127], [93, 127]].
 %%
+possible_e_digits_for([]) -> [[], []];
 possible_e_digits_for(PossibleNumbers) ->
   %% @todo: может можно сделать за раз ?
   SrcPossibleFirstDigits = [ X div 10 || X <- PossibleNumbers],
@@ -98,7 +99,6 @@ possible_e_digits_for(PossibleNumbers) ->
   PossibleSecondDigits = non_duplicate_list(SrcPossibleSecondDigits),
 
   [numbers:encode_digits(PossibleFirstDigits), numbers:encode_digits(PossibleSecondDigits)].
-
 
 non_duplicate_list(List) ->
   Set = sets:from_list(List),

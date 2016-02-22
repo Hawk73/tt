@@ -17,6 +17,9 @@ perform(Indications, StartNumbers) ->
 
 
 perform([], _, [FirstMissing, SecondMissing]) -> {ok, [FirstMissing, SecondMissing]};
+%% Последний элемент может содержать флаг окончания
+perform([{_Uuid, finished}], _, [FirstMissing, SecondMissing]) -> {ok, [FirstMissing, SecondMissing]};
+perform(_, [], _) -> errors:no_solutions();
 perform([{_Uuid, FirstEDigit, SecondEDigit}|Indications], CurrentNumbers, [FirstMissing, SecondMissing]) ->
   [PossibleFirstEDigits, PossibleSecondEDigits] = numbers:possible_e_digits_for(CurrentNumbers),
 
@@ -29,9 +32,7 @@ perform([{_Uuid, FirstEDigit, SecondEDigit}|Indications], CurrentNumbers, [First
   NextNumbers = [X-1 || X <- CurrentNumbers, X-1 > 0],
   perform(Indications, NextNumbers, [FirstMissing bor CurrentFirstMissing, SecondMissing bor CurrentSecondMissing]);
 
-%% Первое значение
-perform([{_Uuid, []}|Indications], CurrentNumbers, [FirstMissing, SecondMissing]) ->
-  perform(Indications, CurrentNumbers, [FirstMissing, SecondMissing]).
+perform(_, _, _) -> {error, <<"Internal error: code 4">>}.
 
 
 %% Находит точно горящие секции.

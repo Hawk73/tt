@@ -11,7 +11,7 @@ start_link() ->
   supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 init([]) ->
-  sequence_processor:init(),
+  sequence_processor:start(),
   Procs = [],
 %%  @todo: узнать почему не работает?
 %%  Procs = [

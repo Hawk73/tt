@@ -25,10 +25,10 @@ process(<<"POST">>, true, Req) ->
   Body = process_data(DecodedReqBody),
   cowboy_req:reply(200, [], Body, Req);
 process(<<"POST">>, false, Req) ->
-  Body = responses:error(<<"Missing body.">>),
+  Body = responses:error(<<"Missing body">>),
   cowboy_req:reply(400, [], Body, Req);
 process(_, _, Req) ->
-  Body = responses:error(<<"Method not allowed.">>),
+  Body = responses:error(<<"Method not allowed">>),
   cowboy_req:reply(405, [], Body, Req).
 
 
@@ -57,7 +57,7 @@ process_data(_Data = [
     {error, Msg} ->
       responses:error(Msg)
   end;
-process_data(InvalidData) -> responses:error(<<"Invalid format.">>, InvalidData).
+process_data(InvalidData) -> responses:error(<<"Invalid format">>, InvalidData).
 
 
 terminate(_Reason, _Req, _State) ->

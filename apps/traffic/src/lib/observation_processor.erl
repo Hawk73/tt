@@ -7,28 +7,37 @@
 -include("recdef.hrl").
 -include("numbers.hrl").
 
-perform(_Data = #indication{color=Color, first_e_digit=FirstEDigit, second_e_digit=SecondEDigit, uuid=Uuid}) ->
-  error_logger:info_msg("Color: ~p~n", [Color]),
-  error_logger:info_msg("First number: ~p~n", [FirstEDigit]),
-  error_logger:info_msg("Second number: ~p~n", [SecondEDigit]),
-  error_logger:info_msg("Uuid: ~p~n", [Uuid]),
-  case sequence_processor:exists_uuid(Uuid) of
-    true ->
-      sequence_processor:append_data(Uuid, FirstEDigit, SecondEDigit),
-      Finished = Color == <<"red">>,
-      find_start_and_missing(Uuid, Finished);
+perform(IndicationData = #indication{uuid=Uuid, color=Color, first_e_digit=_, second_e_digit=_}) ->
+  case sequence_processor:last_item(Uuid) of
+    {Uuid, first} ->
+      case Color of
+        <<"green">> ->
+          sequence_processor:delete(Uuid),
+          sequence_processor:append_data(IndicationData),
+          find_start_and_missing(Uuid, Color);
+        _ ->
+          errors:no_data()
+      end;
+    {Uuid, _, _} ->
+      sequence_processor:append_data(IndicationData),
+      find_start_and_missing(Uuid, Color);
+    {Uuid, finished} ->
+      errors:data_after_red();
     _ ->
-      {error, <<"The sequence isn't found.">>}
+      errors:no_sequence()
   end;
-perform(_) ->
-  {error, <<"Invalid data.">>}.
+perform(_) -> errors:invalid_data().
 
 
-%% @todo: добавить обработку красного цвета
-find_start_and_missing(Uuid, _Finished) ->
+find_start_and_missing(Uuid, LastColor) ->
   Indications = sequence_processor:data(Uuid),
 
-  case start_finder:perform(Indications) of
+  StartData = case LastColor == <<"red">> of
+    true -> {ok, [length(Indications) - 1]};
+    _ -> start_finder:perform(Indications)
+  end,
+
+  case StartData of
     {ok, StartNumbers} ->
       case missing_finder:perform(Indications, StartNumbers) of
         {ok, MissingSections} -> {ok, [StartNumbers, MissingSections]};

@@ -18,3 +18,4 @@ apps/*/ebin
 .DS_Store
 
 .traffic.plt
+*.beam
