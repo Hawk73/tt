@@ -19,7 +19,6 @@
 dispatch_rules() ->
   cowboy_router:compile([
     {'_', [
-      {"/", hello_handler, []},
       {"/sequence/create", sequence_handler, []},
       {"/observation/add", observation_handler, []},
       {'_', not_found_handler, []}
