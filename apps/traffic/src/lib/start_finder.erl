@@ -55,7 +55,7 @@ determine_start_number([{_, FirstEDigit, SecondEDigit}|Items], PossibleFirstEDig
       determine_start_number(Items, NextPossibleFirstEDigits, NextPossibleSecondEDigits, Step + 1)
   end;
 
-determine_start_number(_, _, _, _) -> {error, <<"Internal error: code 3">>}.
+determine_start_number(_, _, _, _) -> errors:internal_error(<<"3">>).
 
 
 %% Возвращает возможные варианты цифр (для одного разряда)

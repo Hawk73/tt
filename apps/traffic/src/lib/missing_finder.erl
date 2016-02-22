@@ -32,7 +32,7 @@ perform([{_Uuid, FirstEDigit, SecondEDigit}|Indications], CurrentNumbers, [First
   NextNumbers = [X-1 || X <- CurrentNumbers, X-1 > 0],
   perform(Indications, NextNumbers, [FirstMissing bor CurrentFirstMissing, SecondMissing bor CurrentSecondMissing]);
 
-perform(_, _, _) -> {error, <<"Internal error: code 4">>}.
+perform(_, _, _) -> errors:internal_error(<<"4">>).
 
 
 %% Находит точно горящие секции.
