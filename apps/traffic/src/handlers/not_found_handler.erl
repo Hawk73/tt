@@ -9,7 +9,7 @@ init(_Transport, Req, _Opts) ->
   {ok, Req, undefined_state}.
 
 handle(Req, State) ->
-  Body = <<"<h1>404 Page Not Found</h1>">>,
+  Body = <<"404 Page Not Found">>,
   {ok, Req2} = cowboy_req:reply(404, [], Body, Req),
   {ok, Req2, State}.
 

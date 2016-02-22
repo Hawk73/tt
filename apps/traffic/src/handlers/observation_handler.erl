@@ -22,7 +22,10 @@ process(<<"POST">>, true, Req) ->
   %% @todo: Может заюзать опцию content_decode для парсинга?
   {ok, ReqBody, _Req2} = cowboy_req:body(Req),
   DecodedReqBody = decode(ReqBody),
-  Body = process_data(DecodedReqBody),
+  Body = case parse_indication(DecodedReqBody) of
+    {ok, Indication} -> process_data(Indication);
+     _ -> responses:error(<<"Invalid format">>, DecodedReqBody)
+  end,
   cowboy_req:reply(200, [], Body, Req);
 process(<<"POST">>, false, Req) ->
   Body = responses:error(<<"Missing body">>),
@@ -40,24 +43,30 @@ decode(ReqBody) ->
   end.
 
 
-%% @todo: провалидировать цвет
-process_data(_Data = [
-  {<<"observation">>, [{<<"color">>, Color}, {<<"numbers">>, BinaryDigitStrs}]},
+
+parse_indication(_Data = [
+  {<<"observation">>, [{<<"color">>, <<"green">>}, {<<"numbers">>, BinaryDigitStrs}]},
   {<<"sequence">>, Uuid}
 ]) ->
-  Indication = case numbers:parse_binary_digits(BinaryDigitStrs) of
+  case numbers:parse_binary_digits(BinaryDigitStrs) of
     [{ok, FirstEDigit}, {ok, SecondEDigit}] ->
-      #indication{color=Color, first_e_digit=FirstEDigit, second_e_digit=SecondEDigit, uuid=Uuid};
+      {ok, #indication{uuid=Uuid, color=green, first_e_digit=FirstEDigit, second_e_digit=SecondEDigit}};
     _ -> error
-  end,
+  end;
 
+parse_indication(_Data = [{<<"observation">>, [{<<"color">>, <<"red">>}]}, {<<"sequence">>, Uuid}]) ->
+  {ok, #indication{uuid=Uuid, color=red}};
+
+parse_indication(_Data) -> error.
+
+
+process_data(Indication = #indication{}) ->
   case observation_processor:perform(Indication) of
     {ok, [StartNumbers, MissingSections]} ->
       observation_responses:ok(StartNumbers, MissingSections);
     {error, Msg} ->
       responses:error(Msg)
-  end;
-process_data(InvalidData) -> responses:error(<<"Invalid format">>, InvalidData).
+  end.
 
 
 terminate(_Reason, _Req, _State) ->

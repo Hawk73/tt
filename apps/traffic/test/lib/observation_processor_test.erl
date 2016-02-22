@@ -5,9 +5,7 @@
 -include("recdef.hrl").
 -include("numbers.hrl").
 
--define(TEST_UUID, <<"Test uuid">>).
 -define(setup(F), {setup, fun start/0, fun stop/1, F}).
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% TESTS DESCRIPTIONS %%%
@@ -40,7 +38,7 @@ invalid_uuid() ->
     ?assertEqual(
       {error, <<"The sequence isn't found">>},
       observation_processor:perform(
-        #indication{uuid = <<"invlaid_uuid">>, color = <<"green">>, first_e_digit = ?ZERO, second_e_digit = ?ZERO}
+        #indication{uuid = <<"invlaid_uuid">>, color = green, first_e_digit = ?ZERO, second_e_digit = ?ZERO}
       )
     )
   ].
@@ -51,7 +49,7 @@ first_red() ->
     ?assertEqual(
       {error, <<"There isn't enough data">>},
       observation_processor:perform(
-        #indication{uuid = Uuid, color = <<"red">>, first_e_digit = ?ZERO, second_e_digit = ?ZERO}
+        #indication{uuid = Uuid, color = red, first_e_digit = ?ZERO, second_e_digit = ?ZERO}
       )
     )
   ].
@@ -59,22 +57,22 @@ first_red() ->
 data_after_red() ->
   {Uuid, true} = sequence_processor:create_uuid(),
   observation_processor:perform(
-    #indication{uuid = Uuid, color = <<"green">>, first_e_digit = ?ZERO, second_e_digit = ?ZERO}
+    #indication{uuid = Uuid, color = green, first_e_digit = ?ZERO, second_e_digit = ?ZERO}
   ),
   observation_processor:perform(
-    #indication{uuid = Uuid, color = <<"red">>}
+    #indication{uuid = Uuid, color = red}
   ),
   [
     ?assertEqual(
       {error, <<"The red observation should be the last">>},
       observation_processor:perform(
-        #indication{uuid = Uuid, color = <<"green">>, first_e_digit = ?ZERO, second_e_digit = ?ZERO}
+        #indication{uuid = Uuid, color = green, first_e_digit = ?ZERO, second_e_digit = ?ZERO}
       )
     ),
     ?assertEqual(
       {error, <<"The red observation should be the last">>},
       observation_processor:perform(
-        #indication{uuid = Uuid, color = <<"red">>, first_e_digit = ?ZERO, second_e_digit = ?ZERO}
+        #indication{uuid = Uuid, color = red, first_e_digit = ?ZERO, second_e_digit = ?ZERO}
       )
     )
   ].
@@ -82,7 +80,7 @@ data_after_red() ->
 delete_first() ->
   {Uuid, true} = sequence_processor:create_uuid(),
   observation_processor:perform(
-    #indication{uuid = Uuid, color = <<"green">>, first_e_digit = ?ONE, second_e_digit = ?TWO}
+    #indication{uuid = Uuid, color = green, first_e_digit = ?ONE, second_e_digit = ?TWO}
   ),
   Data = sequence_processor:data(Uuid),
   [

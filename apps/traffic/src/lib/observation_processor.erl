@@ -11,7 +11,7 @@ perform(IndicationData = #indication{uuid=Uuid, color=Color, first_e_digit=_, se
   case sequence_processor:last_item(Uuid) of
     {Uuid, first} ->
       case Color of
-        <<"green">> ->
+        green ->
           sequence_processor:delete(Uuid),
           sequence_processor:append_data(IndicationData),
           find_start_and_missing(Uuid, Color);
@@ -32,7 +32,7 @@ perform(_) -> errors:invalid_data().
 find_start_and_missing(Uuid, LastColor) ->
   Indications = sequence_processor:data(Uuid),
 
-  StartData = case LastColor == <<"red">> of
+  StartData = case LastColor == red of
     true -> {ok, [length(Indications) - 1]};
     _ -> start_finder:perform(Indications)
   end,

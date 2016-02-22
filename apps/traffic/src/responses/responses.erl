@@ -6,7 +6,7 @@
 ]).
 
 error(Msg, Data) ->
-  error_logger:info_msg("Data: ~p~n", [Data]),
+  error_logger:info_msg("Invalid data: ~p~n", [Data]),
   responses:error(Msg).
 
 error(Msg) ->

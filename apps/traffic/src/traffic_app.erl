@@ -1,6 +1,8 @@
 -module(traffic_app).
 -behaviour(application).
 
+-include("server_config.hrl").
+
 %% Application callbacks
 -export([
   start/2,
@@ -32,7 +34,7 @@ dispatch_rules() ->
 
 start(_Type, _Args) ->
   Dispatch = dispatch_rules(),
-  Port = 8080,
+  Port = ?PORT,
   {ok, _} = cowboy:start_http(my_http_listener, 100,
     [{port, Port}],
     [{env, [{dispatch, Dispatch}]}]

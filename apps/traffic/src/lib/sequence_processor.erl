@@ -22,9 +22,8 @@ stop() ->
 
 
 create_uuid() ->
-  %%@todo: может заюзать uuid4
-  Uuid = uuid:uuid1(),
-  UuidString = uuid:to_string(Uuid),
+  Uuid = uuid:get_v4(),
+  UuidString = uuid:uuid_to_string(Uuid),
   UuidBitString = list_to_bitstring(UuidString),
   Created = ets:insert(?TAB, {UuidBitString, first}),
   {UuidBitString, Created}.
@@ -35,16 +34,16 @@ delete(Uuid) ->
 
 
 last_item(Uuid) ->
-  %% @todo: может найти долее дешевый способcase data(Uuid) of
+  %% @todo: может найти долее дешевый способ
   case data(Uuid) of
     [] -> undefined;
     Data -> lists:last(Data)
   end.
 
 
-append_data(_Data = #indication{uuid=Uuid, color = <<"green">>, first_e_digit=FirstEDigit, second_e_digit=SecondEDigit}) ->
+append_data(_Data = #indication{uuid=Uuid, color=green, first_e_digit=FirstEDigit, second_e_digit=SecondEDigit}) ->
   ets:insert(?TAB, {Uuid, FirstEDigit, SecondEDigit});
-append_data(_Data = #indication{uuid=Uuid, color = <<"red">>, first_e_digit=_, second_e_digit=_}) ->
+append_data(_Data = #indication{uuid=Uuid, color=red, first_e_digit=_, second_e_digit=_}) ->
   ets:insert(?TAB, {Uuid, finished}).
 
 
