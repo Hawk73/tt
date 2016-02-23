@@ -4,7 +4,7 @@ PROJECT_VERSION = 1.0.0
 
 DEPS = cowboy uuid jsx
 
-TEST_DEPS = etest_http
+TEST_DEPS = etest_http meck
 
 include erlang.mk
 
