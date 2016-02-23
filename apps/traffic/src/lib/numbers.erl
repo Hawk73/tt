@@ -100,6 +100,6 @@ possible_e_digits_for(PossibleNumbers) ->
 
   [numbers:encode_digits(PossibleFirstDigits), numbers:encode_digits(PossibleSecondDigits)].
 
+
 non_duplicate_list(List) ->
-  Set = sets:from_list(List),
-  sets:to_list(Set).
+  lists:usort(List).

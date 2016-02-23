@@ -12,7 +12,7 @@
 %% Поиск возможных стартовых значений.
 %%
 perform(Indications) ->
-  case determine_start_number(Indications, ?POSSIBLE_FIRST_NUMBERS, ?POSSIBLE_SECOND_NUMBERS, 0) of
+  case determine_start_number(Indications, ?POSSIBLE_NUMBERS, ?POSSIBLE_NUMBERS, 0) of
     {ok, Step, PossibleNumbers} -> {ok, [X+Step || X <- PossibleNumbers]};
     Error -> Error
   end.
@@ -37,7 +37,6 @@ determine_start_number([{_, FirstEDigit, SecondEDigit}|Items], PossibleFirstEDig
   %% Сужаем возможные значения в зависимости от полученного значения
   SuitableFirstEDigits = suitable_e_digits_for(FirstEDigit, PossibleFirstEDigits, []),
   SuitableSecondEDigits = suitable_e_digits_for(SecondEDigit, PossibleSecondEDigits, []),
-
   case Items of
     [] ->
       determine_start_number(Items, SuitableFirstEDigits, SuitableSecondEDigits, Step);

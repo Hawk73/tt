@@ -1,5 +1,16 @@
 %% EDigit (EncodedDigit) число от 0 до 9 закодированное при помощи encode_digit
 
+%% Нумерация секций
+%%    0
+%%    -
+%% 1 | | 2
+%%    3
+%%    -
+%% 4 | | 5
+%%    -
+%%    6
+
+%% Кодирование чисел
 %%  0   1   2   3   4   5   6   7   8   9
 %%  -       -   -       -   -   -   -   -
 %% | |   |   |   | | | |   |     | | | | |
@@ -29,7 +40,6 @@
 -define(NINE, 2#1111011).
 
 
--define(POSSIBLE_FIRST_NUMBERS, [?ZERO, ?ONE, ?TWO, ?THREE, ?FOUR, ?FIVE, ?SIX, ?SEVEN, ?EIGHT, ?NINE]).
--define(POSSIBLE_SECOND_NUMBERS, [?ONE, ?TWO, ?THREE, ?FOUR, ?FIVE, ?SIX, ?SEVEN, ?EIGHT, ?NINE]).
+-define(POSSIBLE_NUMBERS, [?ZERO, ?ONE, ?TWO, ?THREE, ?FOUR, ?FIVE, ?SIX, ?SEVEN, ?EIGHT, ?NINE]).
 
 -define(BINARY_WEIGHT, {1, 2, 4, 8, 16, 32, 64}).
