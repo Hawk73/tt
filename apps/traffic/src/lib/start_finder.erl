@@ -38,19 +38,16 @@ determine_start_number([{_, FirstEDigit, SecondEDigit}|Items], PossibleFirstEDig
   SuitableFirstEDigits = suitable_e_digits_for(FirstEDigit, PossibleFirstEDigits, []),
   SuitableSecondEDigits = suitable_e_digits_for(SecondEDigit, PossibleSecondEDigits, []),
 
-  %% @todo: ускорение поиска ??
-  %%  когда Step = 0
-  %% 1. получить PossibleNumbers
-  %% 2. исключить варианты у которые не хватает секунд для всех итераций
-
   case Items of
     [] ->
       determine_start_number(Items, SuitableFirstEDigits, SuitableSecondEDigits, Step);
     _ ->
       %% Определяем возможные значения для следующего шага
       PossibleNumbers = possible_numbers_for(SuitableFirstEDigits, SuitableSecondEDigits),
-      %% Уменьшаем следующие возможные значения на 1, оставляя все что больше 0.
-      NextPossibleNumbers = [X-1 || X <- PossibleNumbers, X-1 > 0],
+      %% Уменьшаем следующие возможные значения на 1, при этом количества секунд должно быть достаточно
+      %% для последующих шагов.
+      RemainingSeconds = length(Items),
+      NextPossibleNumbers = [ X - 1 || X <- PossibleNumbers, X - RemainingSeconds > 0 ],
       [NextPossibleFirstEDigits, NextPossibleSecondEDigits] = numbers:possible_e_digits_for(NextPossibleNumbers),
       determine_start_number(Items, NextPossibleFirstEDigits, NextPossibleSecondEDigits, Step + 1)
   end;
