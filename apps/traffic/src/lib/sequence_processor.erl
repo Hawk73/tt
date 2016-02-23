@@ -2,10 +2,13 @@
 
 -include("recdef.hrl").
 
+-define(DUMP_FILE_NAME, "traffic_ets.dump").
+
 -export([
   start/0,
   stop/0,
   clear/0,
+  save/0,
   create_uuid/0,
   delete/1,
   last_item/1,
@@ -14,8 +17,12 @@
 ]).
 
 start() ->
-  %% @todo: заменить ETS на DETS
-  ets:new(?TAB, [duplicate_bag, public, named_table]).
+  case ets:file2tab(?DUMP_FILE_NAME) of
+    {ok, ?TAB} -> ok;
+    _ ->
+      file:delete(?DUMP_FILE_NAME),
+      ets:new(?TAB, [duplicate_bag, public, named_table])
+  end.
 
 
 stop() ->
@@ -23,7 +30,12 @@ stop() ->
 
 
 clear() ->
+  file:delete(?DUMP_FILE_NAME),
   ets:delete_all_objects(?TAB).
+
+
+save() ->
+  ets:tab2file(?TAB, ?DUMP_FILE_NAME).
 
 
 create_uuid() ->

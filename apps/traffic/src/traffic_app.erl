@@ -34,6 +34,9 @@ dispatch_rules() ->
 %% ===================================================================
 
 start(_Type, _Args) ->
+  %% @todo: добавить поднятие ets после падения
+  sequence_processor:start(),
+
   Dispatch = dispatch_rules(),
   Port = ?PORT,
   {ok, _} = cowboy:start_http(my_http_listener, 100,
@@ -43,4 +46,5 @@ start(_Type, _Args) ->
   traffic_sup:start_link().
 
 stop(_State) ->
+  sequence_processor:save(),
   ok.
