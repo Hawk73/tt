@@ -5,7 +5,8 @@
 -export([
   not_found_test_case/1,
   create_sequence_test_case/1,
-  add_observation_test_case/1
+  add_observation_test_case/1,
+  clear_test_case/1
 ]).
 
 
@@ -21,7 +22,8 @@ all() ->
   [
     not_found_test_case,
     create_sequence_test_case,
-    add_observation_test_case
+    add_observation_test_case,
+    clear_test_case
   ].
 
 
@@ -43,6 +45,12 @@ add_observation_test_case(_Config) ->
   Response = ?perform_post("http://localhost:8080/observation/add", RequestHeaders, RequestBody),
   ?assert_status(200, Response),
   ?assert_body("{\"status\": \"error\", \"msg\": \"The sequence isn't found\"}", Response).
+
+
+clear_test_case(_Config) ->
+  Response = ?perform_post("http://localhost:8080/clear"),
+  ?assert_status(200, Response),
+  ?assert_body("{\"status\": \"ok\", \"response\": \"ok\"}", Response).
 
 
 %%suite() ->

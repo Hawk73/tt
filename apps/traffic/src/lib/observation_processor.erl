@@ -9,7 +9,7 @@
 
 perform(IndicationData = #indication{uuid=Uuid, color=Color, first_e_digit=_, second_e_digit=_}) ->
   case sequence_processor:last_item(Uuid) of
-    {Uuid, first} ->
+    {Uuid, empty} ->
       case Color of
         green ->
           sequence_processor:delete(Uuid),

@@ -23,6 +23,7 @@ dispatch_rules() ->
     {'_', [
       {"/sequence/create", sequence_handler, []},
       {"/observation/add", observation_handler, []},
+      {"/clear", clear_handler, []},
       {'_', not_found_handler, []}
     ]}
   ]).

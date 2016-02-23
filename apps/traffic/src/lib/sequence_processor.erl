@@ -5,6 +5,7 @@
 -export([
   start/0,
   stop/0,
+  clear/0,
   create_uuid/0,
   delete/1,
   last_item/1,
@@ -21,11 +22,15 @@ stop() ->
   ets:delete(?TAB).
 
 
+clear() ->
+  ets:delete_all_objects(?TAB).
+
+
 create_uuid() ->
   Uuid = uuid:get_v4(),
   UuidString = uuid:uuid_to_string(Uuid),
   UuidBitString = list_to_bitstring(UuidString),
-  Created = ets:insert(?TAB, {UuidBitString, first}),
+  Created = ets:insert(?TAB, {UuidBitString, empty}),
   {UuidBitString, Created}.
 
 
