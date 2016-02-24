@@ -22,11 +22,11 @@ make
 
 ```
 
-Start server:
+Start server
 ```
 make on
 ```
-Stop server:
+Stop server
 ```
 make off
 ```
@@ -66,6 +66,28 @@ curl -v -X POST -d '{"observation": {"color": "green", "numbers": ["1110111", "0
 ```
 curl -v -X POST -d '{}' localhost:8080/clear
 ```
+
+## Docker
+
+```
+docker build -t traffic .
+
+docker run -ti -p 8080:8080 traffic /bin/bash
+
+cd traffic_project
+
+make
+```
+
+Start server:
+```
+make on
+```
+Stop server:
+```
+make off
+```
+
 
 ## Other
 
