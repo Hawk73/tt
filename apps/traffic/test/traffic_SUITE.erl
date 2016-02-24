@@ -6,7 +6,8 @@
   not_found_test_case/1,
   create_sequence_test_case/1,
   add_observation_test_case/1,
-  clear_test_case/1
+  clear_test_case/1,
+  example_test_case/1
 ]).
 
 
@@ -23,7 +24,8 @@ all() ->
     not_found_test_case,
     create_sequence_test_case,
     add_observation_test_case,
-    clear_test_case
+    clear_test_case,
+    example_test_case
   ].
 
 
@@ -52,6 +54,41 @@ clear_test_case(_Config) ->
   ?assert_status(200, Response),
   ?assert_body("{\"status\": \"ok\", \"response\": \"ok\"}", Response).
 
+
+example_test_case(_Config) ->
+  ?perform_post("http://localhost:8080/clear"),
+
+  FakeUuid = "fake-uuid",
+  stub_generate_uuid(FakeUuid),
+  ?perform_post("http://localhost:8080/sequence/create"),
+
+  RequestHeaders =  "",
+
+  RequestBody1 =
+    "{\"observation\": {\"color\": \"green\",\"numbers\": [\"1110111\", \"0011101\"]},\"sequence\": \"fake-uuid\"}",
+  Response1 = ?perform_post("http://localhost:8080/observation/add", RequestHeaders, RequestBody1),
+  ?assert_status(200, Response1),
+  ?assert_body(
+    "{\"status\": \"ok\", \"response\": {\"start\": [88,82,8,2], \"missing\": [\"0000000\",\"1000000\"]}}",
+    Response1
+  ),
+
+  RequestBody2 =
+    "{\"observation\": {\"color\": \"green\",\"numbers\": [\"1110111\", \"0010000\"]},\"sequence\": \"fake-uuid\"}",
+  Response2 = ?perform_post("http://localhost:8080/observation/add", RequestHeaders, RequestBody2),
+  ?assert_status(200, Response2),
+  ?assert_body(
+    "{\"status\": \"ok\", \"response\": {\"start\": [88,82,8,2], \"missing\": [\"0000000\",\"1000010\"]}}",
+    Response2
+  ),
+
+  RequestBody3 = "{\"observation\": {\"color\": \"red\"},\"sequence\": \"fake-uuid\"}",
+  Response3 = ?perform_post("http://localhost:8080/observation/add", RequestHeaders, RequestBody3),
+  ?assert_status(200, Response3),
+  ?assert_body(
+    "{\"status\": \"ok\", \"response\": {\"start\": [2], \"missing\": [\"0000000\",\"1000010\"]}}",
+    Response3
+  ).
 
 %%suite() ->
 %%  [{timetrap,{seconds,30}}].
@@ -91,3 +128,10 @@ do_start([App|Apps], Started) ->
 stop(Apps) ->
   _ = [ application:stop(App) || App <- Apps ],
   ok.
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%% HELPER FUNCTIONS %%%
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+stub_generate_uuid(FakeUuid) ->
+  meck:expect(uuid, uuid_to_string, fun(_) -> FakeUuid end).
