@@ -15,6 +15,7 @@
 find_start_test_() ->
   [
     {"All sections are broken", ?setup(fun all_broken_test/0)},
+    {"Witout broken sections", ?setup(fun without_broken/0)},
     {"Test from doc", ?setup(fun example_test/0)}
   ].
 
@@ -43,6 +44,17 @@ all_broken_test() ->
     ?assertEqual({ok, ["0000000", "0000000"]}, missing_finder:perform(
       [{?TEST_UUID, 0, 0}, {?TEST_UUID, 0, 0}],
       StartNumbers
+    ))
+  ].
+
+without_broken() ->
+  [
+    ?assertEqual({ok, ["0000000", "0000000"]}, missing_finder:perform(
+      [{?TEST_UUID, ?EIGHT, ?THREE},
+        {?TEST_UUID, ?EIGHT, ?TWO},
+        {?TEST_UUID, ?EIGHT, ?ONE},
+        {?TEST_UUID, ?EIGHT, ?ZERO}],
+      [83]
     ))
   ].
 

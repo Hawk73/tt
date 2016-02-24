@@ -17,6 +17,7 @@ find_start_test_() ->
     {"Test from doc", ?setup(fun example_test/0)},
     {"Returns no solution error", ?setup(fun no_solution_error_test/0)},
     {"All sections are broken", ?setup(fun all_broken_test/0)},
+    {"Witout broken sections", ?setup(fun without_broken/0)},
     {"Other tests", ?setup(fun other_test/0)}
   ].
 
@@ -67,6 +68,16 @@ all_broken_test() ->
     ])),
     ?assertEqual({ok, ExpectedStartNumbers2}, start_finder:perform([
       {?TEST_UUID, 0, 0}, {?TEST_UUID, 0, 0}
+    ]))
+  ].
+
+without_broken() ->
+  [
+    ?assertEqual({ok, [83]}, start_finder:perform([
+      {?TEST_UUID, ?EIGHT, ?THREE},
+      {?TEST_UUID, ?EIGHT, ?TWO},
+      {?TEST_UUID, ?EIGHT, ?ONE},
+      {?TEST_UUID, ?EIGHT, ?ZERO}
     ]))
   ].
 
