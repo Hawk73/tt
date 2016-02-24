@@ -1,30 +1,22 @@
-REBAR = `which rebar`
+PROJECT = traffic
+PROJECT_DESCRIPTION = Traffic App
+PROJECT_VERSION = 1.0.0
 
-all: deps compile generate
+DEPS = cowboy uuid jsx
 
-deps:
-	@( $(REBAR) get-deps )
+TEST_DEPS = etest_http meck
 
-compile: clean
-	@( $(REBAR) compile )
+include erlang.mk
 
-generate: generate
-	@( $(REBAR) generate )
+test: tests
 
-clean:
-	@( $(REBAR) clean )
+on:
+	@( ./_rel/traffic_release/bin/traffic_release start )
 
-run:
-	@( erl -pa ebin deps/*/ebin -s traffic )
+off:
+	@( ./_rel/traffic_release/bin/traffic_release stop )
 
-start:
-	@( ./rel/traffic_project/bin/traffic_project start )
-
-stop:
-	@( ./rel/traffic_project/bin/traffic_project stop )
+reon: off on
 
 console:
-	@( ./rel/traffic_project/bin/traffic_project console )
-
-
-.PHONY: all deps compile generate clean run start stop console
+	@( erl -pa ebin deps/*/ebin )
