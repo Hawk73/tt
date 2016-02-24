@@ -9,6 +9,13 @@ rel/traffic_project
 rel/reltool.sample.config
 
 
+.rebar
+.erlang.mk
+.deps
+_rel
+ebin
+logs
+
 apps/*/.rebar
 apps/*/.erlang.mk
 apps/*/.deps

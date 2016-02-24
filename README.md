@@ -8,19 +8,18 @@ Create release
 ```
 git clone git@github.com:Hawk73/tt.git
 
-cd tt/apps/traffic
-
 make
 ...
 ===> Starting relx build process ...
 ===> Resolving OTP Applications from directories:
-          /tt/apps/traffic/ebin
-          /tt/apps/traffic/deps
+          /traffic_project/ebin
+          /traffic_project/deps
           /usr/local/Cellar/erlang/18.2.1/lib/erlang/lib
-          /apps/traffic/apps
+          /traffic_project/apps
 ===> Resolved traffic_release-1.0.0
 ===> Including Erts from /usr/local/Cellar/erlang/18.2.1/lib/erlang
 ===> release successfully created!
+
 ```
 
 Start server:
@@ -34,7 +33,7 @@ make off
 
 You can view logs by following path:
 ```
-app/traffic/_rel/traffic_release/log/
+_rel/traffic_release/log/
 ```
 
 
@@ -72,5 +71,5 @@ curl -v -X POST -d '{}' localhost:8080/clear
 
 - You can change HTTP server port in
 ```
-tt/apps/traffic/include/server_config.hrl
+include/server_config.hrl
 ```
