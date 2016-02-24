@@ -16,6 +16,7 @@ find_start_test_() ->
   [
     {"Test from doc", ?setup(fun example_test/0)},
     {"Returns no solution error", ?setup(fun no_solution_error_test/0)},
+    {"All sections are broken", ?setup(fun all_broken_test/0)},
     {"Other tests", ?setup(fun other_test/0)}
   ].
 
@@ -52,6 +53,20 @@ no_solution_error_test() ->
       {?TEST_UUID, ?ZERO, ?TWO},
       {?TEST_UUID, ?ZERO, ?ONE},
       {?TEST_UUID, ?ZERO, ?TWO}
+    ]))
+  ].
+
+all_broken_test() ->
+  Digits = [9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
+  ExpectedStartNumbers1 = [ X * 10 + Y || X <- Digits, Y <- Digits ] -- [0],
+  ExpectedStartNumbers2 = ExpectedStartNumbers1 -- [1],
+
+  [
+    ?assertEqual({ok, ExpectedStartNumbers1}, start_finder:perform([
+      {?TEST_UUID, 0, 0}
+    ])),
+    ?assertEqual({ok, ExpectedStartNumbers2}, start_finder:perform([
+      {?TEST_UUID, 0, 0}, {?TEST_UUID, 0, 0}
     ]))
   ].
 

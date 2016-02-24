@@ -5,6 +5,6 @@
 ]).
 
 ok(StartNumbers, MissingSections) ->
-  Pattern = "{\"status\": \"ok\", \"response\": {\"start\": ~lp, \"missing\": ~100p}}",
+  Pattern = "{\"status\": \"ok\", \"response\": {\"start\": ~1000lp, \"missing\": ~1000p}}",
   AnswerList = io_lib:format(Pattern, [StartNumbers, MissingSections]),
   lists:flatten(AnswerList).

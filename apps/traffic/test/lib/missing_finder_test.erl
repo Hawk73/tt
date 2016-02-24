@@ -14,6 +14,7 @@
 
 find_start_test_() ->
   [
+    {"All sections are broken", ?setup(fun all_broken_test/0)},
     {"Test from doc", ?setup(fun example_test/0)}
   ].
 
@@ -31,22 +32,30 @@ stop(_) ->
 %%% ACTUAL TESTS %%%
 %%%%%%%%%%%%%%%%%%%%
 
+all_broken_test() ->
+  Digits = [9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
+  StartNumbers = [ X * 10 + Y || X <- Digits, Y <- Digits ],
+  [
+    ?assertEqual({ok, ["0000000", "0000000"]}, missing_finder:perform(
+      [{?TEST_UUID, 0, 0}],
+      StartNumbers
+    )),
+    ?assertEqual({ok, ["0000000", "0000000"]}, missing_finder:perform(
+      [{?TEST_UUID, 0, 0}, {?TEST_UUID, 0, 0}],
+      StartNumbers
+    ))
+  ].
+
 example_test() ->
   [
-    ?assertEqual(
-      {ok, ["0000000", "1000000"]},
-      missing_finder:perform(
-        [{?TEST_UUID, 2#1110111, 2#0011101}],
-        [2, 8, 82, 88]
-      )
-    ),
-    ?assertEqual(
-      {ok, ["0000000", "1000010"]},
-      missing_finder:perform(
-        [{?TEST_UUID, 2#1110111, 2#0011101}, {?TEST_UUID, 2#1110111, 2#0010000}],
-        [2, 8, 82, 88]
-      )
-    )
+    ?assertEqual({ok, ["0000000", "1000000"]}, missing_finder:perform(
+      [{?TEST_UUID, 2#1110111, 2#0011101}],
+      [2, 8, 82, 88]
+    )),
+    ?assertEqual({ok, ["0000000", "1000010"]}, missing_finder:perform(
+      [{?TEST_UUID, 2#1110111, 2#0011101}, {?TEST_UUID, 2#1110111, 2#0010000}],
+      [2, 8, 82, 88]
+    ))
   ].
 
 %%%%%%%%%%%%%%%%%%%%%%%%

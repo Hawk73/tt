@@ -13,7 +13,10 @@
 %%
 perform(Indications) ->
   case determine_start_number(Indications, ?POSSIBLE_NUMBERS, ?POSSIBLE_NUMBERS, 0) of
-    {ok, Step, PossibleNumbers} -> {ok, [X+Step || X <- PossibleNumbers]};
+    {ok, Step, PossibleNumbers} ->
+      AllStartStartNumbers = [ X + Step || X <- PossibleNumbers],
+      ElapsedSeconds = length(Indications),
+      {ok, [ X || X <- AllStartStartNumbers, X - ElapsedSeconds >= 0 andalso X < 100]};
     Error -> Error
   end.
 
